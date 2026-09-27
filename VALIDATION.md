@@ -1,19 +1,10 @@
 # Prüfprotokoll
 
-Datum: 27.09.2026. Alle Änderungen liegen in `KI-Englischlehrerin`. Die ersten Abschnitte übersetzen das bestehende historische Protokoll; neue Prüfungen zur deutschen Oberfläche werden gesondert ergänzt.
+Datum: 27.09.2026. Dieses Protokoll dokumentiert Prüfungen des eigenständigen Repositorys `KI-Englischlehrerin`. Historische und spätere Prüfrunden sind getrennt aufgeführt.
 
-## Ursprungsprojekte und Datenbank
+## Erste automatisierte Prüfungen
 
-- Vor der Zusammenführung wurden SHA-256-Prüfsummen von 76 Quelldateien aus EnglishLehrer und 93 aus EnglishLehrerGemini einschließlich Konfiguration und Dokumentation erfasst. Die abschließende Prüfung aller 169 Dateien ergab keine Änderung. Die ursprünglichen `.git`-Verzeichnisse wurden weder kopiert noch verändert.
-- `server/store.js` entsprach dem ursprünglichen EnglishLehrer bytegenau; das Datenbankschema blieb bei Version 4.
-- SQLite-Datei und WAL-/SHM-Begleitdateien wurden ausschließlich nach `.cache/compatibility-snapshot` kopiert. Geöffnet wurde nur diese Kopie; die Originaldatenbank wurde nicht über SQLite geöffnet und nicht in das standardmäßige `data` importiert.
-- Die Kopie lieferte `PRAGMA integrity_check=ok`. Der Vergleich aller Tabellen und Zeilen vor und nach dem Öffnen war identisch: 18 Themen, 12 Unterrichtspläne, 9 Stunden, 167 Antworten, 153 Fragen, 49 unterrichtete Einträge, 3 Vorbereitungsnachrichten, 5 historische Bildeinträge und die übrigen Zustandstabellen blieben erhalten.
-- Temporäre Kopien, Startprüfdaten und Verzeichnisse zum Prüfen der Ausschlussregeln blieben in der ignorierten `.cache`. Die damalige automatische Genehmigungsprüfung blockierte das abschließende Löschen; es wurde kein anderer Löschweg verwendet.
-- Der neue Datenspeicher konnte Themen, Pläne, frühere Stunden und Lernergebnisse der Kopie lesen. Die URL-Zuordnung des Bildverzeichnisses blieb erhalten. Für eine spätere Übernahme ist das vollständige `data` zu kopieren; siehe README.
-
-## Automatisierte Prüfungen der Zusammenführung
-
-- 124 Node-Prüfungen bestanden, darunter 24 Anbieterkombinationen, Schlüsseltrennung, Groß- und Kleinschreibung, Vorrang von Umgebungsvariablen, ungültige Konfigurationen sowie Schreibschutz für Originalverzeichnisse und Verzeichnisverknüpfungen.
+- 124 Node-Prüfungen bestanden, darunter 24 Anbieterkombinationen, Schlüsseltrennung, Groß- und Kleinschreibung, Vorrang von Umgebungsvariablen, ungültige Konfigurationen sowie Schutz ungültiger Datenpfade und Verzeichnisverknüpfungen.
 - Drei Vorbereitungswege wurden geprüft: native Gemini-Werkzeugaufrufe mit Denksignaturen sowie Themenpflege, Planerstellung und Werkzeugantworten über OpenAI und DeepSeek.
 - Unterrichtsantworten wurden auf Denkinhalte im Speicher, passende Werkzeug-IDs, Abbruch und verspätete Antworten geprüft. Fehlende Schlüssel verhindern den Live-Start, unvollständige Antworten führen keine Werkzeuge aus, und Anbieterfehler geben keine Anfrageinhalte preis.
 - OpenAI-Backend `fast` und Vorbereitungsassistent `auto` wurden unabhängig übergeben. DeepSeek-Anfragen enthalten weder OpenAI-Dienstpriorität noch die Anforderung verschlüsselter Denkinhalte.
@@ -28,13 +19,11 @@ Datum: 27.09.2026. Alle Änderungen liegen in `KI-Englischlehrerin`. Die ersten 
 - Mit Systemschlüsseln wurde der Modellzugriff abgefragt: OpenAI `gpt-live-1`, `gpt-6-luna` und `gpt-transcribe` sowie Gemini `gemini-3.8-live`, `gemini-3.5-flash-lite` und `gemini-3.5-transcribe` waren erreichbar.
 - Echte Werkzeugaufrufe über zwei Runden mit synthetischen Daten bestanden: OpenAI-Backend `gpt-6-luna` / low / fast, OpenAI-Vorbereitung `gpt-6-luna` / high / auto und Gemini-Vorbereitung `gemini-3.5-flash-lite` / high.
 - `DEEPSEEK_API_KEY` fehlte auf dem Rechner. Beide DeepSeek-Rollen bestanden simulierte Adapter- und Fachlogikprüfungen; echte DeepSeek-Aufrufe wurden nicht geprüft.
-- Die echten Abfragen verwendeten nur synthetische Texte oder Modellmetadaten und sendeten keine Unterrichtsdaten aus der Originaldatenbank.
+- Die echten Abfragen verwendeten nur synthetische Texte oder Modellmetadaten und sendeten keine gespeicherten Lernaufzeichnungen.
 
 ## Grenzen der bisherigen Prüfung
 
 Eine echte Kinderstunde, physische Mikrofone und Lautsprecher, Spracherkennung bei Lärm, Safari/iPad und lange Live-Sitzungen wurden nicht abgenommen. Modellzugriffsabfragen ersetzen diese Prüfungen nicht. OpenAI-Browserprüfungen verwenden einen simulierten Transport; Gemini-Audioprüfungen verwenden echte Browser-AudioWorklets und lokale WebSockets mit einem simulierten Modelldienst.
-
-Zum Abschluss der ursprünglichen Zusammenführung gab es keinen Commit, keinen Push und keine Bereitstellung im Internet. Beide Ursprungsanwendungen blieben unabhängig nutzbar; das neue Projekt verwendet standardmäßig Port 3212. Spätere Anbieterwechsel und die Quellcodeveröffentlichung werden separat dokumentiert.
 
 ## Erste Fassung der Online-Einstellungen
 
@@ -48,7 +37,7 @@ Diese historische Fassung vom 27.09.2026 erlaubte noch das Bearbeiten von Modell
 - Abschließende Playwright-Gesamtprüfung: **30 / 30 bestanden**, Protokoll `.cache/model-settings-browser-final.log`. Erfasst wurden beide Live-Verbindungen, echte Browser-AudioWorklets, lokale PCM-Verarbeitung, Aufnahmen, Unterricht und Einstellungen. Ein zwischenzeitlicher Audioverbindungsfehler trat während einer parallelen Neuerstellung auf. Er galt nicht als bestandene Prüfung; anschließend bestanden 2 / 2 getrennte Audioprüfungen und eine vollständige Prüfung ohne parallele Neuerstellung mit 30 / 30. Eine eindeutige Ursache des ersten Fehlers wurde nicht bestätigt.
 - Das Einstellungsfenster hatte bei 1280×620 und 390×844 keinen horizontalen Überlauf. Tab blieb im Fenster, Escape schloss es und gab den Fokus ans Zahnrad zurück. Die Bilder wurden visuell geprüft.
 - Die Produktionsoberfläche wurde erstellt. Nach Bestätigung, dass keine Stunde oder Vorbereitung aktiv war, wurde der Dienst neu gestartet. `http://127.0.0.1:3212/api/settings` lieferte Status 200, vier Konfigurationen und `Cache-Control: no-store`, ohne Schlüsselwerte. Die aktuelle Anbieterauswahl wurde nicht geändert.
-- Diese Runde rief keine echten kostenpflichtigen Modelle auf und prüfte weder physische Mikrofone noch Kinderstunden oder echte Parameterkombinationen. Die vorstehenden echten Dienstprüfungen stammen aus der Zusammenführung.
+- Diese Runde rief keine echten kostenpflichtigen Modelle auf und prüfte weder physische Mikrofone noch Kinderstunden oder echte Parameterkombinationen. Die vorstehenden echten Dienstprüfungen stammen aus einer früheren Prüfrunde.
 
 ## Nur Anbieter sind bearbeitbar
 
@@ -73,4 +62,13 @@ Ergänzende Prüfung vom 27.09.2026:
 - `.gitignore` wurde um Zugangsdaten-Dateien, Dienstkonto-Dateien, Exporte und weitere SQLite-/Datenbank-Begleitdateien ergänzt. Praktische Ausschlussprüfungen bestätigten, dass `.env`, Datenbanken, Schlüssel, Abhängigkeiten, Cache, Oberfläche und Prüfberichte nicht versioniert werden. `.env.example` bleibt versioniert und enthält leere Schlüsselwerte.
 - Der zur Veröffentlichung vorgesehene Git-Index umfasst 95 Projektdateien. Die Schlüsselprüfung verglich auch vorhandene Prozessschlüssel mit dem Index; echte Schlüssel wurden nicht gefunden. Alle Musterfunde waren ausdrücklich geprüfte synthetische Werte in Testdateien. `git diff --cached --check` bestand.
 - Das Ziel `wanzhikid123/KI-Englischlehrerin` wurde als leeres öffentliches GitHub-Repository bestätigt. Git wurde ausschließlich im Projektverzeichnis mit Zweig `main` und diesem Ziel eingerichtet. Die Quellcodeveröffentlichung stellt keinen öffentlichen Anwendungsdienst bereit.
-- In dieser Runde wurden keine echten Modelle aufgerufen und keine physischen Mikrofone, Kinderstunden oder Safari/iPad geprüft. Die Prüfung und alle temporären Dateien blieben in `KI-Englischlehrerin`; beide Ursprungsprojekte wurden nicht geöffnet oder verändert.
+- In dieser Runde wurden keine echten Modelle aufgerufen und keine physischen Mikrofone, Kinderstunden oder Safari/iPad geprüft. Die Prüfung und alle temporären Dateien blieben in `KI-Englischlehrerin`.
+
+## Eigenständige Projektbeschreibung
+
+Dokumentationsänderung vom 27.09.2026:
+
+- README und Anforderungen beschreiben ausschließlich diese Anwendung. Anleitungen zur Datenübernahme und Beschreibungen externer Projektverzeichnisse wurden entfernt; das Prüfprotokoll wurde entsprechend bereinigt.
+- Die Konfigurationsvorlage und die Kommentare der lokalen `.env` beschreiben nur Port und eigenes Datenverzeichnis. Ein Vergleich bestätigte unveränderte Konfigurationswerte. Die lokale `.env` bleibt von Git ausgeschlossen.
+- Anwendungscode und Tests wurden nicht verändert. Die vorstehenden Testergebnisse gehören zur letzten Codeprüfung; für diese Dokumentationsänderung wurden keine Modellaufrufe oder erneuten Anwendungstests ausgeführt.
+- Alle versionierten Markdown-Dateien und die Konfigurationsvorlage wurden auf verbleibende externe Projektbeschreibungen und chinesische feste Texte geprüft. Der Git-Index wurde auf Schlüssel und ausgeschlossene Dateien geprüft; `git diff --cached --check` bestand.

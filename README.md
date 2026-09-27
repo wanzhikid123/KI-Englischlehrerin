@@ -1,6 +1,6 @@
 # KI-Englischlehrerin
 
-Eine lokale Englischlern-App mit deutscher Benutzeroberfläche. Sie verbindet OpenAI Live aus EnglishLehrer mit Gemini Live, PCM-Audioverarbeitung und Unterrichtssteuerung aus EnglishLehrerGemini. Für vier Aufgabenbereiche lassen sich die Anbieter unabhängig auswählen. Themen, Vorbereitungsgespräche, Unterrichtspläne, Rückmeldungen zu Antworten, Lernaufzeichnungen und der direkte Start gespeicherter Unterrichtspläne bleiben erhalten.
+Eine eigenständige lokale Englischlern-App mit deutscher Benutzeroberfläche. Sie unterstützt Live-Gespräche über OpenAI oder Gemini, PCM-Audioverarbeitung und eine eigene Unterrichtssteuerung. Für vier Aufgabenbereiche lassen sich die Anbieter unabhängig auswählen. Die App bietet Themen, Vorbereitungsgespräche, Unterrichtspläne, Rückmeldungen zu Antworten, Lernaufzeichnungen und den direkten Start gespeicherter Unterrichtspläne.
 
 ## Starten und beenden
 
@@ -45,7 +45,7 @@ Jeder Bereich liest ausschließlich den zugehörigen `OPENAI_API_KEY`, `GEMINI_A
 
 Nur das OpenAI-Backend liest `OPENAI_BACKEND_SERVICE_TIER` (`auto` / `fast`) und zeigt diesen Wert in den Einstellungen an. **Gespräche & Unterrichtsplan** verwendet bei OpenAI immer `auto`; `OPENAI_TEACHER_SERVICE_TIER` und früher gespeicherte Werte werden ignoriert. Dieser feste Wert wird im Einstellungsfenster nicht angezeigt. Modellzugriff, Denkstufen und Berechtigung für `fast` hängen vom Anbieterkonto ab; `fast` kann zusätzliche Kosten verursachen.
 
-Der Transkriptionsanbieter steuert nur Aufnahmen bei der Vorbereitung, nicht die Erkennung oder Untertitel des Live-Gesprächs. Frühere Variablen wie `ENGLISH_*`, `GEMINI_PORT`, `GEMINI_DATA_DIR` und `BACKEND_PROVIDER` gelten in diesem Projekt nicht, damit keine Ports oder Datenbanken der Ursprungsprojekte übernommen werden.
+Der Transkriptionsanbieter steuert nur Aufnahmen bei der Vorbereitung, nicht die Erkennung oder Untertitel des Live-Gesprächs.
 
 ## API-Anbindung
 
@@ -54,22 +54,9 @@ Der Transkriptionsanbieter steuert nur Aufnahmen bei der Vorbereitung, nicht die
 - Gemini-Vorbereitung verwendet natives `generateContent`, übersetzt Werkzeugdefinitionen und Werkzeugantworten und gibt vollständige Modellteile sowie Denksignaturen zurück.
 - OpenAI-Transkription verwendet `/audio/transcriptions`. Gemini verwendet die native Interactions API mit `gemini-3.5-transcribe`, eingebettetem Audio und `store:false`.
 
-Im ursprünglichen Zusammenführungsprotokoll wurden am 27.09.2026 diese offiziellen Dokumentationen herangezogen: [OpenAI Fast mode](https://developers.openai.com/api/docs/guides/fast-mode), [DeepSeek Responses](https://api-docs.deepseek.com/guides/responses_api/), [Gemini-Werkzeugaufrufe](https://ai.google.dev/gemini-api/docs/generate-content/function-calling) und [Gemini-Denkparameter](https://ai.google.dev/gemini-api/docs/thinking). Die Adapter senden OpenAI-Parameter wie `service_tier` oder verschlüsselten Denkkontext nicht an Gemini oder DeepSeek.
+Offizielle Dokumentation zu den API-Adaptern: [OpenAI Fast mode](https://developers.openai.com/api/docs/guides/fast-mode), [DeepSeek Responses](https://api-docs.deepseek.com/guides/responses_api/), [Gemini-Werkzeugaufrufe](https://ai.google.dev/gemini-api/docs/generate-content/function-calling) und [Gemini-Denkparameter](https://ai.google.dev/gemini-api/docs/thinking). Die Adapter senden OpenAI-Parameter wie `service_tier` oder verschlüsselten Denkkontext nicht an Gemini oder DeepSeek.
 
 Weitere Referenzen: [OpenAI-Denkparameter](https://developers.openai.com/api/docs/guides/reasoning), [GPT-Live-Sitzungen und Stimmen](https://developers.openai.com/api/docs/guides/live-conversations) und [Gemini-Live-Funktionen](https://ai.google.dev/gemini-api/docs/live-api/capabilities). Die Einstellungen zeigen die Umgebungskonfiguration; Zugriff und Parameterunterstützung bestimmt der jeweilige Anbieter.
-
-## Daten aus EnglishLehrer übernehmen
-
-Die Datenbank bleibt `data/learning.sqlite` mit Schema-Version 4. `server/store.js` entsprach bei der Zusammenführung unverändert dem Ursprungsprojekt. Themen, Vorbereitungsgespräche, Unterrichtspläne, Stundenstände, Fragen, Antworten und Lernergebnisse bleiben kompatibel; Bilder liegen weiterhin unter `data/images/`.
-
-Bei der Zusammenführung wurde die ursprüngliche Datenbank ausschließlich als Kopie in `.cache` geprüft und nicht in das standardmäßige Laufzeitverzeichnis importiert. Eine spätere Übernahme erfolgt so:
-
-1. Laufende Stunden beenden und sowohl EnglishLehrer als auch dieses Projekt stoppen.
-2. Beide vorhandenen Datenverzeichnisse sichern. Bei einer angepassten Variable `ENGLISH_DATA_DIR` das entsprechende Ursprungsverzeichnis verwenden.
-3. Das vollständige ursprüngliche Datenverzeichnis nach `KI-Englischlehrerin/data` kopieren, einschließlich `images` und vorhandener SQLite-Dateien mit `-wal` und `-shm`. Nicht nur `learning.sqlite` während des Betriebs kopieren.
-4. `KI_DATA_DIR=data` beibehalten, die neue App starten und Themen, Unterrichtspläne sowie Lernergebnisse prüfen.
-
-Zwei gefüllte Datenverzeichnisse dürfen nicht vermischt werden: Die Übernahme ersetzt einen vollständigen Datenbestand und führt keine Lernaufzeichnungen zusammen. Der neue Dienst verhindert, dass `KI_DATA_DIR` auf eines der Ursprungsprojekte verweist, auch über Verzeichnisverknüpfungen. API-Schlüssel werden gesondert eingerichtet und liegen nicht in der Datenbank.
 
 ## Wartung und Prüfung
 
@@ -84,7 +71,7 @@ Die ersten drei Befehle rufen keine echten Modelle auf. Die Browserprüfungen en
 
 Das optionale `node scripts/smoke-text.js` sendet synthetische Werkzeugtests an echte Backend- und Vorbereitungsmodelle; dabei können Kosten entstehen. `--all` prüft alle Textanbieter mit eingerichtetem Schlüssel und kennzeichnet fehlende Schlüssel als übersprungen. Echte Lernaufzeichnungen werden nicht gelesen, Denkinhalte nicht ausgegeben. Ergebnisse und Grenzen stehen in `VALIDATION.md`.
 
-`REQUIREMENTS.md` beschreibt Anforderungen, `VALIDATION.md` dokumentiert Prüfungen und Grenzen, `THIRD_PARTY_NOTICES.md` enthält Lizenzhinweise. Alte Migrationspläne, frühere Umsetzungsprotokolle, ursprüngliche `.git`-Verzeichnisse, `.env`-Dateien und erzeugte Dateien wurden nicht aus den Ursprungsprojekten übernommen. Abhängigkeiten und Oberfläche werden hier unabhängig erstellt.
+`REQUIREMENTS.md` beschreibt Anforderungen, `VALIDATION.md` dokumentiert Prüfungen und Grenzen, `THIRD_PARTY_NOTICES.md` enthält Lizenzhinweise. Abhängigkeiten und Oberfläche werden im Projektverzeichnis erstellt.
 
 ## GitHub-Veröffentlichung
 

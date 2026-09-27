@@ -1,21 +1,20 @@
 # Anforderungen
 
-Grundlage: bestätigte Nutzeranweisungen vom 27.09.2026. Die folgenden Abschnitte dokumentieren die Zusammenführung und ihre späteren Ergänzungen.
+Grundlage: bestätigte Nutzeranweisungen vom 27.09.2026. Diese Anforderungen beschreiben das eigenständige Repository `KI-Englischlehrerin`.
 
-## Zusammenführung
+## Anwendung
 
-- Das neue Projekt liegt in `KI-Englischlehrerin`. EnglishLehrer und EnglishLehrerGemini wurden bei der Zusammenführung ausschließlich als Referenz gelesen; ihre Dateien dürfen nicht verändert, gelöscht oder überschrieben werden.
+- Das Projekt wird als eigenständiges Repository entwickelt und veröffentlicht. Änderungen und Prüfdateien bleiben innerhalb von `KI-Englischlehrerin`.
 - Live-Gespräche unterstützen OpenAI und Gemini mit jeweils eigenen Modellen und Stimmen.
 - Das Unterrichts-Backend unterstützt OpenAI und DeepSeek. OpenAI-Denkintensität und Dienstpriorität (`auto` / `fast`) sind konfigurierbar.
 - Aufnahmen zur Vorbereitung werden unabhängig von Live über OpenAI oder Gemini transkribiert.
 - Der Vorbereitungsassistent unterstützt OpenAI, Gemini und DeepSeek für Gespräche, Themenpflege und Unterrichtspläne. Modelle und Denkstufen sind unabhängig konfigurierbar; Gemini verwendet seinen nativen API-Adapter.
 - Schlüssel werden ausschließlich aus den System- bzw. Prozessumgebungsvariablen des jeweiligen Anbieters gelesen, einschließlich vorhandener Windows-Variablen. Lokale `.env`-Schlüssel, Eingabefelder für Schlüssel und automatische Anbieterwechsel sind ausgeschlossen.
 - Deutsche Oberfläche, englische Lerninhalte, chinesische Vorbereitungsgespräche, Themen- und Unterrichtsplanverwaltung sowie der direkte Start gespeicherter Pläne bleiben erhalten. Das gilt ebenso für Rückmeldungen zu Klick- und Sprachantworten, selbstständiges Fortsetzen, Vorrang neuer Kinderäußerungen, Sprechtempo und Lernaufzeichnungen.
-- Datenbank und Bildpfade bleiben mit EnglishLehrer kompatibel. Standardmäßig wird ein eigenes Datenverzeichnis verwendet. Alte Daten werden nur als Kopie auf Kompatibilität geprüft; zwei Datenbanken werden nicht zusammengeführt.
-- Kommentierte `.env` und `.env.example`, Start- und Stoppskripte, README, Prüfprotokoll und `.gitignore` gehören zum Projekt. Veraltete Migrationsdokumente und sachfremde Dateien werden nicht übernommen.
-- Die ursprüngliche Zusammenführung umfasste keinen Commit, keine GitHub-Veröffentlichung und keine Bereitstellung im Internet. Die spätere Anweisung zur GitHub-Veröffentlichung steht im letzten Abschnitt.
+- Standardmäßig liegen lokale Daten unter `data/`: SQLite-Datenbank `learning.sqlite`, Bilder unter `images/` und gespeicherte Anbieterauswahl in `model-settings.json`.
+- Kommentierte `.env` und `.env.example`, Start- und Stoppskripte, README, Prüfprotokoll und `.gitignore` gehören zum Projekt.
 
-Prüfziele sind Konfigurations- und Schlüsseltrennung für 24 Anbieterkombinationen, Lebenszyklen beider Live-Verbindungen, drei Vorbereitungsadapter, zwei Transkriptionswege, Fehler und Abbruch, bestehende Unterrichtsabläufe sowie verlustfreies Lesen einer SQLite-Kopie. Simulationen und echte API- bzw. Mikrofonprüfungen werden getrennt dokumentiert.
+Prüfziele sind Konfigurations- und Schlüsseltrennung für 24 Anbieterkombinationen, Lebenszyklen beider Live-Verbindungen, drei Vorbereitungsadapter, zwei Transkriptionswege, Fehler und Abbruch, Unterrichtsabläufe sowie zuverlässige Speicherung und Wiederherstellung lokaler Lernaufzeichnungen. Simulationen und echte API- bzw. Mikrofonprüfungen werden getrennt dokumentiert.
 
 ## Einstellungen im laufenden Betrieb
 
@@ -31,9 +30,9 @@ Prüfziele sind Konfigurations- und Schlüsseltrennung für 24 Anbieterkombinati
 
 Ergänzende Nutzeranweisung vom 27.09.2026:
 
-- Ausschließlich innerhalb von `KI-Englischlehrerin` arbeiten. Die beiden Ursprungsprojekte bleiben unberührt.
+- Ausschließlich innerhalb von `KI-Englischlehrerin` arbeiten.
 - Alle festen Oberflächentexte einschließlich Navigation, Überschriften, Schaltflächen, Formularbeschriftungen und Sprachauswahl sind auf Deutsch.
 - Alle eigenen Markdown-Dokumente sind auf Deutsch. Englische Lerninhalte, Namen und technische Bezeichner bleiben erhalten; automatisch installierte Abhängigkeitsdokumentation wird nicht verändert.
 - Chinesische Chatnachrichten und chinesische Spracheingabe bleiben erlaubt. Die Oberflächensprache beschränkt keine Nutzereingaben oder Antworten im Vorbereitungsgespräch.
 - `.gitignore` aktualisieren und den zur Veröffentlichung vorgesehenen Git-Index auf Schlüssel sowie lokale oder erzeugte Dateien prüfen.
-- Nach erfolgreicher Prüfung committen und nach `https://github.com/wanzhikid123/KI-Englischlehrerin.git` pushen. Diese Anweisung erweitert den ursprünglichen Umfang um die Quellcodeveröffentlichung.
+- Nach erfolgreicher Prüfung committen und nach `https://github.com/wanzhikid123/KI-Englischlehrerin.git` pushen.
